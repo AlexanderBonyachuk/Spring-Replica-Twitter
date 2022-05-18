@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>Sweater</title>
     <link rel="stylesheet" href="/static/style.css">
+
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
