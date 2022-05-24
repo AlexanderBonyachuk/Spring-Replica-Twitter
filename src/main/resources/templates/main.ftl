@@ -1,5 +1,4 @@
 <#import "parts/common.ftl" as c>
-<#import "parts/login.ftl" as l>
 
 <@c.page>
 <div class="form-row">
@@ -27,7 +26,13 @@
                 </#if>
             </div>
             <div class="form-group">
-                <input type="text" class="form-control" name="tag" placeholder="Тэг">
+                <input type="text" class="form-control ${(tagError??)?string('is-invalid', '')}"
+                       value="<#if message??>${message.tag}</#if>" name="tag" placeholder="Тэг">
+                <#if tagError??>
+                    <div class="invalid-feedback">
+                        ${tagError}
+                    </div>
+                </#if>
             </div>
             <div class="form-group">
                 <div class="custom-file">

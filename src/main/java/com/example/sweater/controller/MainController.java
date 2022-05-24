@@ -71,10 +71,13 @@ public class MainController {
                     uploadDir.mkdir();
                 }
                 String uuidFile = UUID.randomUUID().toString();
-                String resultFileName = uuidFile + "." + file.getOriginalFilename();
-                file.transferTo(new File(uploadPath + "/" + resultFileName));
-                message.setFilename(resultFileName);
+                String resultFilename = uuidFile + "." + file.getOriginalFilename();
+
+                file.transferTo(new File(uploadPath + "/" + resultFilename));
+
+                message.setFilename(resultFilename);
             }
+            model.addAttribute("message", null);
 
             messageRepo.save(message);
         }
