@@ -25,7 +25,6 @@ import java.util.UUID;
 
 @Controller
 public class MainController {
-
     @Autowired
     private MessageRepo messageRepo;
 
@@ -65,10 +64,12 @@ public class MainController {
 
         if (bindingResult.hasErrors()) {
             Map<String, String> errorsMap = ControllerUtils.getErrors(bindingResult);
+
             model.mergeAttributes(errorsMap);
             model.addAttribute("message", message);
         } else {
             saveFile(message, file);
+
             model.addAttribute("message", null);
 
             messageRepo.save(message);
@@ -81,12 +82,14 @@ public class MainController {
         return "main";
     }
 
-    private void saveFile(Message message, MultipartFile file) throws IOException {
+    private void saveFile(@Valid Message message, @RequestParam("file") MultipartFile file) throws IOException {
         if (file != null && !file.getOriginalFilename().isEmpty()) {
             File uploadDir = new File(uploadPath);
+
             if (!uploadDir.exists()) {
                 uploadDir.mkdir();
             }
+
             String uuidFile = UUID.randomUUID().toString();
             String resultFilename = uuidFile + "." + file.getOriginalFilename();
 
@@ -125,6 +128,7 @@ public class MainController {
             if (!StringUtils.isEmpty(text)) {
                 message.setText(text);
             }
+
             if (!StringUtils.isEmpty(tag)) {
                 message.setTag(tag);
             }
@@ -133,6 +137,7 @@ public class MainController {
 
             messageRepo.save(message);
         }
+
         return "redirect:/user-messages/" + user;
     }
 }
