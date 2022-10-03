@@ -28,7 +28,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Controller
-public class MainController {
+public class MessageController {
     @Autowired
     private MessageRepo messageRepo;
 
@@ -112,7 +112,9 @@ public class MainController {
             @AuthenticationPrincipal User currentUser,
             @PathVariable User user,
             Model model,
-            @RequestParam(required = false) Message message
+            @RequestParam(required = false) Message message,
+            @PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable
+            //
     ) {
         Set<Message> messages = user.getMessages();
 
@@ -123,6 +125,7 @@ public class MainController {
         model.addAttribute("messages", messages);
         model.addAttribute("message", message);
         model.addAttribute("isCurrentUser", currentUser.equals(user));
+        model.addAttribute("url", "/user-messages/" + user.getId());
 
         return "userMessages";
     }
