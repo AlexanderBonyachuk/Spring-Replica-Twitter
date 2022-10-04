@@ -3,6 +3,7 @@ package com.example.sweater.controller;
 import com.example.sweater.domain.Message;
 import com.example.sweater.domain.User;
 import com.example.sweater.repos.MessageRepo;
+import com.example.sweater.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -32,6 +33,9 @@ public class MessageController {
     @Autowired
     private MessageRepo messageRepo;
 
+    @Autowired
+    private MessageService messageService;
+
     @Value("${upload.path}")
     private String uploadPath;
 
@@ -45,13 +49,7 @@ public class MessageController {
                        Model model,
                        @PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        Page<Message> page;
-
-        if (filter != null && !filter.isEmpty()) {
-            page = messageRepo.findByTag(filter, pageable);
-        } else {
-            page = messageRepo.findAll(pageable);
-        }
+        Page<Message> page = messageService.messageList(pageable, filter);
 
         model.addAttribute("page", page);
         model.addAttribute("url", "/main");
@@ -107,25 +105,24 @@ public class MessageController {
         }
     }
 
-    @GetMapping("/user-messages/{user}")
+    @GetMapping("/user-messages/{author}")
     public String userMessages(
             @AuthenticationPrincipal User currentUser,
-            @PathVariable User user,
+            @PathVariable User author,
             Model model,
             @RequestParam(required = false) Message message,
             @PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable
-            //
     ) {
-        Set<Message> messages = user.getMessages();
+        Page<Message> page = messageService.messageListForUser(pageable, currentUser, author);
 
-        model.addAttribute("userChannel", user);
-        model.addAttribute("subscriptionsCount", user.getSubscriptions().size());
-        model.addAttribute("subscribersCount", user.getSubscribers().size());
-        model.addAttribute("isSubscriber", user.getSubscribers().contains(currentUser));
-        model.addAttribute("messages", messages);
+        model.addAttribute("userChannel", author);
+        model.addAttribute("subscriptionsCount", author.getSubscriptions().size());
+        model.addAttribute("subscribersCount", author.getSubscribers().size());
+        model.addAttribute("isSubscriber", author.getSubscribers().contains(currentUser));
+        model.addAttribute("page", page);
         model.addAttribute("message", message);
-        model.addAttribute("isCurrentUser", currentUser.equals(user));
-        model.addAttribute("url", "/user-messages/" + user.getId());
+        model.addAttribute("isCurrentUser", currentUser.equals(author));
+        model.addAttribute("url", "/user-messages/" + author.getId());
 
         return "userMessages";
     }
