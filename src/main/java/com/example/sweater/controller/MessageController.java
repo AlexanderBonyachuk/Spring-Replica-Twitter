@@ -45,9 +45,11 @@ public class MessageController {
     }
 
     @GetMapping("/main")
-    public String main(@RequestParam(required = false, defaultValue = "") String filter,
-                       Model model,
-                       @PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable
+    public String main(
+            @RequestParam(required = false, defaultValue = "") String filter,
+            Model model,
+            @PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
+            @AuthenticationPrincipal User user
     ) {
         Page<Message> page = messageService.messageList(pageable, filter);
 

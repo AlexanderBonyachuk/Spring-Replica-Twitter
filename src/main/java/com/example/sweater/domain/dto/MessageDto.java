@@ -2,6 +2,7 @@ package com.example.sweater.domain.dto;
 
 import com.example.sweater.domain.Message;
 import com.example.sweater.domain.User;
+import com.example.sweater.domain.util.MessageHelper;
 
 public class MessageDto {
     private Long id;
@@ -20,6 +21,10 @@ public class MessageDto {
         this.filename = message.getFilename();
         this.likes = likes;
         this.meLiked = meLiked;
+    }
+
+    public String getAuthorName() {
+        return MessageHelper.getAuthorName(author);
     }
 
     public Long getId() {
@@ -48,5 +53,15 @@ public class MessageDto {
 
     public Boolean getMeLiked() {
         return meLiked;
+    }
+
+    @Override
+    public String toString() {
+        return "MessageDto{" +
+                "id=" + id +
+                ", author=" + author +
+                ", likes=" + likes +
+                ", meLiked=" + meLiked +
+                '}';
     }
 }

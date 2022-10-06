@@ -1,5 +1,6 @@
 package com.example.sweater.domain;
 
+import com.example.sweater.domain.util.MessageHelper;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -27,11 +28,11 @@ public class Message {
 
     @ManyToMany
     @JoinTable(
-            name = "message likes",
+            name = "message_likes",
             joinColumns = { @JoinColumn(name = "message_id") },
-            inverseJoinColumns = { @JoinColumn(name = "user_id") }
+            inverseJoinColumns = { @JoinColumn(name = "user_id")}
     )
-    private Set<User> likes =new HashSet<>();
+    private Set<User> likes = new HashSet<>();
 
     public Message() {
     }
@@ -43,7 +44,7 @@ public class Message {
     }
 
     public String getAuthorName() {
-        return author != null ? author.getUsername() : "<none>";
+        return MessageHelper.getAuthorName(author);
     }
 
     public User getAuthor() {

@@ -8,10 +8,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+
 @Service
 public class MessageService {
     @Autowired
     private MessageRepo messageRepo;
+
+    @Autowired
+    private EntityManager em;
 
     public Page<Message> messageList(Pageable pageable, String filter) {
         if (filter != null && !filter.isEmpty()) {
